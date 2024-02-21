@@ -300,8 +300,13 @@ static inline int arasan_zynqmp_set_in_tapdelay(u32 node_id, u32 itap_delay)
 		if (ret)
 			return ret;
 
-		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYENA << shift,
-					SD0_ITAPDLYENA << shift);
+		if (itap_delay == 0)
+			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYENA << shift,
+						0);
+		else
+			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYENA << shift,
+						SD0_ITAPDLYENA << shift);
+
 		if (ret)
 			return ret;
 
