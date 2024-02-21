@@ -41,14 +41,11 @@
 #define SD_OTAP_DLY			0xFF180318
 #define SD0_DLL_RST			BIT(2)
 #define SD1_DLL_RST			BIT(18)
+#define SD1_TAP_OFFSET			16
 #define SD0_ITAPCHGWIN			BIT(9)
-#define SD1_ITAPCHGWIN			BIT(25)
 #define SD0_ITAPDLYENA			BIT(8)
-#define SD1_ITAPDLYENA			BIT(24)
 #define SD0_ITAPDLYSEL_MASK		GENMASK(7, 0)
-#define SD1_ITAPDLYSEL_MASK		GENMASK(23, 16)
 #define SD0_OTAPDLYSEL_MASK		GENMASK(5, 0)
-#define SD1_OTAPDLYSEL_MASK		GENMASK(21, 16)
 
 #define MIN_PHY_CLK_HZ			50000000
 
@@ -288,44 +285,32 @@ static int arasan_sdhci_config_dll(struct sdhci_host *host, unsigned int clock, 
 static inline int arasan_zynqmp_set_in_tapdelay(u32 node_id, u32 itap_delay)
 {
 	int ret;
+	u32 shift;
+
+	if (node_id == NODE_SD_0)
+		shift = 0;
+	else if (node_id == NODE_SD_1)
+		shift = SD1_TAP_OFFSET;
+	else
+		return -EINVAL;
 
 	if (IS_ENABLED(CONFIG_XPL_BUILD) || current_el() == 3) {
-		if (node_id == NODE_SD_0) {
-			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPCHGWIN,
-						SD0_ITAPCHGWIN);
-			if (ret)
-				return ret;
-
-			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYENA,
-						SD0_ITAPDLYENA);
-			if (ret)
-				return ret;
-
-			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYSEL_MASK,
-						itap_delay);
-			if (ret)
-				return ret;
-
-			ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPCHGWIN, 0);
-			if (ret)
-				return ret;
-		}
-		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD1_ITAPCHGWIN,
-					SD1_ITAPCHGWIN);
+		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPCHGWIN << shift,
+					SD0_ITAPCHGWIN << shift);
 		if (ret)
 			return ret;
 
-		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD1_ITAPDLYENA,
-					SD1_ITAPDLYENA);
+		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYENA << shift,
+					SD0_ITAPDLYENA << shift);
 		if (ret)
 			return ret;
 
-		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD1_ITAPDLYSEL_MASK,
-					(itap_delay << 16));
+		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPDLYSEL_MASK << shift,
+					itap_delay << shift);
 		if (ret)
 			return ret;
 
-		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD1_ITAPCHGWIN, 0);
+		ret = zynqmp_mmio_write(SD_ITAP_DLY, SD0_ITAPCHGWIN << shift, 0);
 		if (ret)
 			return ret;
 	} else {
@@ -340,14 +325,20 @@ static inline int arasan_zynqmp_set_in_tapdelay(u32 node_id, u32 itap_delay)
 
 static inline int arasan_zynqmp_set_out_tapdelay(u32 node_id, u32 otap_delay)
 {
-	if (IS_ENABLED(CONFIG_XPL_BUILD) || current_el() == 3) {
-		if (node_id == NODE_SD_0)
-			return zynqmp_mmio_write(SD_OTAP_DLY,
-						 SD0_OTAPDLYSEL_MASK,
-						 otap_delay);
+	u32 shift;
 
-		return zynqmp_mmio_write(SD_OTAP_DLY, SD1_OTAPDLYSEL_MASK,
-					 (otap_delay << 16));
+	if (node_id == NODE_SD_0)
+		shift = 0;
+	else if (node_id == NODE_SD_1)
+		shift = SD1_TAP_OFFSET;
+	else
+		return -EINVAL;
+
+	if (IS_ENABLED(CONFIG_XPL_BUILD) || current_el() == 3) {
+		return zynqmp_mmio_write(SD_OTAP_DLY,
+						SD0_OTAPDLYSEL_MASK << shift,
+						otap_delay << shift);
+
 	} else {
 		return xilinx_pm_request(PM_IOCTL, node_id,
 					 IOCTL_SET_SD_TAPDELAY,
