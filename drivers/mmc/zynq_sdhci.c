@@ -44,6 +44,7 @@
 #define SD1_TAP_OFFSET			16
 #define SD0_ITAPCHGWIN			BIT(9)
 #define SD0_ITAPDLYENA			BIT(8)
+#define SD0_OTAPDLYENA			BIT(6)
 #define SD0_ITAPDLYSEL_MASK		GENMASK(7, 0)
 #define SD0_OTAPDLYSEL_MASK		GENMASK(5, 0)
 
@@ -333,6 +334,7 @@ static inline int arasan_zynqmp_set_in_tapdelay(u32 node_id, u32 itap_delay)
 
 static inline int arasan_zynqmp_set_out_tapdelay(u32 node_id, u32 otap_delay)
 {
+	int ret;
 	u32 shift;
 
 	if (node_id == NODE_SD_0)
@@ -343,6 +345,11 @@ static inline int arasan_zynqmp_set_out_tapdelay(u32 node_id, u32 otap_delay)
 		return -EINVAL;
 
 	if (IS_ENABLED(CONFIG_XPL_BUILD) || current_el() == 3) {
+		ret = zynqmp_mmio_write(SD_OTAP_DLY, SD0_OTAPDLYENA << shift,
+					0);
+		if (ret)
+			return ret;
+
 		return zynqmp_mmio_write(SD_OTAP_DLY,
 					 SD0_OTAPDLYSEL_MASK << shift,
 					 otap_delay << shift);
