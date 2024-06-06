@@ -4,6 +4,7 @@
  */
 
 #include <i2c_eeprom.h>
+#include <spi_flash.h>
 #include <linker_lists.h>
 #include <misc.h>
 #include <nvmem.h>
@@ -22,6 +23,8 @@ int nvmem_cell_read(struct nvmem_cell *cell, void *buf, size_t size)
 	switch (cell->nvmem->driver->id) {
 	case UCLASS_I2C_EEPROM:
 		return i2c_eeprom_read(cell->nvmem, cell->offset, buf, size);
+	case UCLASS_SPI_FLASH:
+		return spi_flash_read_dm(cell->nvmem, cell->offset, size, buf);
 	case UCLASS_MISC: {
 		int ret = misc_read(cell->nvmem, cell->offset, buf, size);
 
@@ -58,6 +61,8 @@ int nvmem_cell_write(struct nvmem_cell *cell, const void *buf, size_t size)
 	}
 	case UCLASS_RTC:
 		return dm_rtc_write(cell->nvmem, cell->offset, buf, size);
+	case UCLASS_SPI_FLASH:
+		return spi_flash_write_dm(cell->nvmem, cell->offset, size, buf);
 	default:
 		return -ENOSYS;
 	}
@@ -82,6 +87,7 @@ static int nvmem_get_device(ofnode node, struct nvmem_cell *cell)
 		UCLASS_I2C_EEPROM,
 		UCLASS_MISC,
 		UCLASS_RTC,
+		UCLASS_SPI_FLASH,
 	};
 
 	for (i = 0; i < ARRAY_SIZE(ids); i++) {
