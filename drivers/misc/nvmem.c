@@ -101,14 +101,46 @@ static int nvmem_get_device(ofnode node, struct nvmem_cell *cell)
 	return -ENODEV;
 }
 
+int nvmem_cell_read_partition(struct udevice *dev, ofnode *target_node,
+			      fdt_addr_t *offset)
+{
+	fdt_size_t size = FDT_SIZE_T_NONE;
+	ofnode partition_node, partitions_node;
+
+	if (!ofnode_device_is_compatible(*target_node, "nvmem-cells"))
+		return 0;
+
+	partition_node = *target_node;
+	partitions_node = ofnode_get_parent(*target_node);
+	if (!ofnode_valid(partitions_node))
+		return -EINVAL;
+
+	if (!ofnode_device_is_compatible(partitions_node, "fixed-partitions"))
+		return 0;
+
+	*target_node = ofnode_get_parent(partitions_node);
+	if (!ofnode_valid(*target_node))
+		return -EINVAL;
+
+	*offset = ofnode_get_addr_size_index_notrans(partition_node, 0, &size);
+	if (*offset == FDT_ADDR_T_NONE || size == FDT_SIZE_T_NONE) {
+		dev_dbg(dev, "missing address or size for %s\n",
+			ofnode_get_name(partition_node));
+		return -EINVAL;
+	}
+
+	return 1;
+}
+
 int nvmem_cell_get_by_index(struct udevice *dev, int index,
 			    struct nvmem_cell *cell)
 {
-	fdt_addr_t offset;
+	fdt_addr_t offset = 0;
+	fdt_addr_t partition_offset = 0;
 	fdt_size_t size = FDT_SIZE_T_NONE;
 	int ret;
 	struct ofnode_phandle_args args;
-	ofnode par;
+	ofnode target_node;
 
 	dev_dbg(dev, "%s: index=%d\n", __func__, index);
 
@@ -117,11 +149,15 @@ int nvmem_cell_get_by_index(struct udevice *dev, int index,
 	if (ret)
 		return ret;
 
-	par = ofnode_get_parent(args.node);
-	if (ofnode_device_is_compatible(par, "fixed-layout"))
-		par = ofnode_get_parent(par);
+	target_node = ofnode_get_parent(args.node);
+	if (ofnode_device_is_compatible(target_node, "fixed-layout"))
+		target_node = ofnode_get_parent(target_node);
 
-	ret = nvmem_get_device(par, cell);
+	ret = nvmem_cell_read_partition(dev, &target_node, &partition_offset);
+	if (ret < 0)
+		return ret;
+
+	ret = nvmem_get_device(target_node, cell);
 	if (ret)
 		return ret;
 
@@ -132,7 +168,7 @@ int nvmem_cell_get_by_index(struct udevice *dev, int index,
 		return -EINVAL;
 	}
 
-	cell->offset = offset;
+	cell->offset = partition_offset + offset;
 	cell->size = size;
 	return 0;
 }
