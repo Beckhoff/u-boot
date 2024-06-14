@@ -50,6 +50,12 @@
 		"run try_fpga_load;" \
 	"fi;" \
 	"\0" \
+	"eth_phy_configure_leds=" \
+		"mdio write ${eth_addr} 0x1c 0x8807;" \
+		"mdio write ${eth_addr} 0x1c 0xb8ea;" \
+		"echo \"${eth_addr}: LEDs configured\";" \
+		"exit;" \
+	"\0" \
 	"eth_phy_eee_advertisement_disable=" \
 		"mdio write ${eth_addr} 0x0D 0x0007;" \
 		"mdio write ${eth_addr} 0x0E 0x003C;" \
