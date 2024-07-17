@@ -20,6 +20,7 @@
 	"env set eth_addr ethernet@ff0d0000;" \
 	"run eth_phy_eee_advertisement_disable;" \
 	"run load_fpga_bitstream;" \
+	"mw.b 0xa0000300 3;" \
 	"\0"
 
 #endif /* __CONFIG_BECKHOFF_CX8200_H */
