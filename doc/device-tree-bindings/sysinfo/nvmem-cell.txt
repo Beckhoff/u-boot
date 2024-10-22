@@ -1,0 +1,27 @@
+nvmem cell sysinfo information
+================================
+
+This allows reading sysinfo from nvmem cells.
+
+Required properties:
+  - compatible = "u-boot,sysinfo-nvmem-cell";
+  - nvmem-cells: Phandles of nvmem cells containing sysinfo data
+  - nvmem-cell-names: any of these:
+		"system_manufacturer"
+		"system_product"
+		"system_version"
+		"system_serial"
+		"system_sku"
+		"system_family"
+		"baseboard_manufacturer"
+		"baseboard_product"
+		"baseboard_version"
+		"baseboard_serial"
+		"baseboard_asset_tag"
+
+Example:
+sysinfo {
+	compatible = "u-boot,sysinfo-nvmem-cell";
+	nvmem-cells = <&product>, <&serial>, <&option>, <&product>;
+	nvmem-cell-names = "system_product", "system_serial", "system_sku", "baseboard_product"
+}

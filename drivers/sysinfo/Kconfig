@@ -59,4 +59,9 @@ config SYSINFO_GPIO
 	  This ternary number is then mapped to a board revision name using
 	  device tree properties.
 
+config SYSINFO_NVMEM_CELL
+	bool "Enable sysinfo driver for nvmem cells"
+	help
+	  Support querying device information from nvmem cells
+
 endif
