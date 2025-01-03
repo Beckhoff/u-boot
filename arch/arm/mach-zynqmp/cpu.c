@@ -17,6 +17,7 @@
 #include <zynqmp_firmware.h>
 #include <asm/cache.h>
 #include <dm/platdata.h>
+#include <linux/sizes.h>
 
 #define ZYNQ_SILICON_VER_MASK	0xF000
 #define ZYNQ_SILICON_VER_SHIFT	12
@@ -232,6 +233,71 @@ int zynqmp_mmio_read(const u32 address, u32 *value)
 #endif
 
 	return ret;
+}
+
+#define EARLY_TLB_SIZE SZ_64K
+u8 early_tlb[EARLY_TLB_SIZE] __section(".data") __aligned(0x4000);
+
+/*
+ * Set the default values for the first/low memory region of the ZynqMP
+ * The region has a size of 2GB region and starting at the address 0.
+ */
+#define EARLY_CACHE_LOW_MEM_REG_VIRT_ADDRESS 0x00
+#define EARLY_CACHE_LOW_MEM_REG_PHYS_ADDRESS 0x00
+#define EARLY_CACHE_LOW_MEM_REG_SIZE 0x80000000
+
+/*
+ * Initialize the MMU and activate cache in the U-Boot pre-reloc stage, 
+ * with the maximum memory size as the default value. Later, this value is 
+ * overwritten with the correct values by the functions mem_map_fill() and
+ * enable_caches().
+ * In the U-Boot pre-reloc stage, only the first/low memory region of the
+ * ZynqMP is set in the MMU table.
+ */
+static void early_enable_caches(void)
+{
+	if (CONFIG_IS_ENABLED(SYS_ICACHE_OFF) || CONFIG_IS_ENABLED(SYS_DCACHE_OFF) || CONFIG_IS_ENABLED(CONFIG_ZYNQMP_NO_DDR))
+		return;
+
+	icache_enable();
+
+	/* Use by default the maximum available DRAM size of the first/low memory region. */
+	zynqmp_mem_map[ZYNQMP_MEM_MAP_USED].virt = EARLY_CACHE_LOW_MEM_REG_VIRT_ADDRESS;
+	zynqmp_mem_map[ZYNQMP_MEM_MAP_USED].phys = EARLY_CACHE_LOW_MEM_REG_PHYS_ADDRESS;
+	zynqmp_mem_map[ZYNQMP_MEM_MAP_USED].size = EARLY_CACHE_LOW_MEM_REG_SIZE;
+	zynqmp_mem_map[ZYNQMP_MEM_MAP_USED].attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
+					      PTE_BLOCK_INNER_SHARE;
+
+	gd->arch.tlb_size = EARLY_TLB_SIZE;
+	gd->arch.tlb_addr = (unsigned long)&early_tlb;
+
+	dcache_enable();
+}
+
+int arch_cpu_init(void)
+{
+	early_enable_caches();
+
+	return 0;
+}
+
+/*
+ * Enable dCache & iCache, whether cache is actually enabled
+ * depends on CONFIG_SYS_DCACHE_OFF and CONFIG_SYS_ICACHE_OFF
+ */
+void enable_caches(void)
+{
+	/* Deactivate the data cache, possibly enabled in arch_cpu_init() */
+	dcache_disable();
+
+	/*
+	 * Force the call of setup_all_pgtables() in mmu_setup() by clearing tlb_fillptr
+	 * to update the TLB location updated in board_f.c::reserve_mmu
+	 */
+	gd->arch.tlb_fillptr = 0;
+
+	icache_enable();
+	dcache_enable();
 }
 
 U_BOOT_DRVINFO(soc_xilinx_zynqmp) = {
