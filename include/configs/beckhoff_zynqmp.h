@@ -67,4 +67,13 @@
 		"mdio write ${eth_addr} 0x0E 0x4000;" \
 		"echo \"${eth_addr}: EEE Advertisement disabled\";" \
 		"exit;" \
+	"\0" \
+	"evaluate_reset_button=" \
+		"gpio input ${reset_button_pin}\;" \
+		"if test $? -eq 0; then;" \
+			"echo \"Reset button pressed\";" \
+			"fdt addr ${fdtcontroladdr};" \
+			"fdt set /chosen reset-button-pressed true;" \
+		"fi;" \
+		"exit;" \
 	"\0"
