@@ -256,6 +256,7 @@ dtb-$(CONFIG_ARCH_ZYNQMP) += \
 	avnet-ultra96-rev1.dtb			\
 	zynqmp-a2197-revA.dtb			\
 	zynqmp-beckhoff-cx8200.dtb		\
+	zynqmp-beckhoff-cx9240.dtb		\
 	zynqmp-dlc21-revA.dtb			\
 	zynqmp-e-a2197-00-revA.dtb		\
 	zynqmp-e-a2197-00-revB.dtb		\
