@@ -1,0 +1,95 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+docker-image:
+  image: ${CI_REGISTRY}/beckhoff/okinak:master
+  stage: .pre
+  tags:
+    - docker-v2-privileged
+    - arm64
+  script: okinak build-native
+
+build-zynqmp:
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-arm64
+  tags:
+    - docker-v2
+    - arm64
+  stage: build
+  script:
+    - export DEB_AZDEVOPS_PAT_RO="${AZDEVOPS_PAT_RO}"
+    - bdpg build
+    - bdpg push-pipelines ./debian-release/*.deb ./debian-release/*.dsc
+  artifacts:
+    expire_in: "30 days"
+    when: always
+    paths:
+      - ./debian-release
+
+trigger-build:
+  stage: test
+  trigger:
+    project: beckhoff/test-tcos
+    branch: bhf/13/trixie
+    strategy: depend
+  variables:
+    BHF_CI_PIPELINE_REPOS: 'u-boot/${CI_PIPELINE_ID}'
+    BHF_CI_SKIP_TEST: "y"
+
+get-build-pipeline-id:
+  stage: test
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-arm64
+  tags:
+    - docker-v2
+    - arm64
+  needs:
+    - job: trigger-build
+      artifacts: false
+  script: |
+    build_pipeline_id=$(curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/pipelines/${CI_PIPELINE_ID}/bridges" | jq -r '.[] | select(.name == "trigger-build") | .downstream_pipeline.id')
+    printf "BHF_CI_DOWNSTREAM_PIPELINE_ID=%s\n" "${build_pipeline_id}" > build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+  rules:
+    - if: $BHF_CI_SKIP_TEST == "y"
+      when: never
+    - when: on_success
+
+test-device:
+  stage: test
+  needs:
+    - get-build-pipeline-id
+  trigger:
+    project: beckhoff/test-tcos
+    branch: bhf/13/trixie
+    strategy: depend
+    forward:
+      pipeline_variables: true
+  variables:
+    BHF_CI_PIPELINE_REPOS: 'u-boot/${CI_PIPELINE_ID}'
+    BHF_CI_IMAGE: 'pipelines/${BHF_CI_DOWNSTREAM_PIPELINE_ID}'
+    BHF_CI_BHF_DISTRO: 'pipelines-${BHF_CI_DOWNSTREAM_PIPELINE_ID}'
+  parallel:
+    matrix:
+      - BHF_CI_DEVICE_TAG:
+          - 'CX82xx'
+          - 'CX9240'
+        BHF_CI_DO_INSTALL:
+          - 'y'
+          - 'n'
+  rules:
+    - if: $BHF_CI_SKIP_TEST == "y"
+      when: never
+    - when: on_success
+
+publish:
+  image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}-arm64
+  tags:
+    - docker-v2
+    - arm64
+  stage: deploy
+  script:
+    - bdpg push --check=${CI_DEFAULT_BRANCH} --distros="trixie" ./debian-release/*.deb ./debian-release/*.dsc
+  when: manual

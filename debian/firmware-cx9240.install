@@ -1,0 +1,22 @@
+build/cx9240/u-boot.itb /boot/
+build/cx9240/boot.bin /boot/
+debian/bsm/80-rtc-3032.rules /usr/lib/udev/rules.d/
+debian/bsm/rtc-3032-setup.service /usr/lib/systemd/system
+debian/bsm/rtc-3032-setup.sh /usr/libexec/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B000.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B110.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B115.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B310.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B530.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B800.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B902.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2/CX9240-B931.bin.gz /boot/
+
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B000-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B110-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B115-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B310-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B530-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B800-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B902-3.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/FPGA-Images/CX9240-B931-3.bin.gz /boot/

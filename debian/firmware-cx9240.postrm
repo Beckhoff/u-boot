@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+rm -f /boot/efi/u-boot.itb
+rm -f /boot/efi/boot.bin
+rm -f /boot/efi/beckhoff/fpga/CX9240-B000-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B110-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B115-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B310-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B530-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B800-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B902-3.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX9240-B931-3.bin.gz
+
+rmdir --ignore-fail-on-non-empty /boot/efi/beckhoff
+rmdir --ignore-fail-on-non-empty /boot/efi/beckhoff/fpga
+
+#DEBHELPER#
+

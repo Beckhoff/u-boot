@@ -1,0 +1,27 @@
+#!/bin/sh
+set -e
+
+mkdir -p /boot/efi/beckhoff/fpga
+
+cp /boot/u-boot.itb /boot/efi/u-boot.itb
+cp /boot/boot.bin /boot/efi/boot.bin
+cp /boot/CX8200-B000.bin.gz /boot/efi/beckhoff/fpga/CX8200-B000.bin.gz
+cp /boot/CX8200-B110.bin.gz /boot/efi/beckhoff/fpga/CX8200-B110.bin.gz
+cp /boot/CX8200-B115.bin.gz /boot/efi/beckhoff/fpga/CX8200-B115.bin.gz
+cp /boot/CX8200-B310.bin.gz /boot/efi/beckhoff/fpga/CX8200-B310.bin.gz
+cp /boot/CX8200-B530.bin.gz /boot/efi/beckhoff/fpga/CX8200-B530.bin.gz
+cp /boot/CX8200-B800.bin.gz /boot/efi/beckhoff/fpga/CX8200-B800.bin.gz
+cp /boot/CX8200-B902.bin.gz /boot/efi/beckhoff/fpga/CX8200-B902.bin.gz
+cp /boot/CX8200-B931.bin.gz /boot/efi/beckhoff/fpga/CX8200-B931.bin.gz
+
+cp /boot/CX8200-B000-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B000-2.bin.gz
+cp /boot/CX8200-B110-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B110-2.bin.gz
+cp /boot/CX8200-B115-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B115-2.bin.gz
+cp /boot/CX8200-B310-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B310-2.bin.gz
+cp /boot/CX8200-B530-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B530-2.bin.gz
+cp /boot/CX8200-B800-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B800-2.bin.gz
+cp /boot/CX8200-B902-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B902-2.bin.gz
+cp /boot/CX8200-B931-2.bin.gz /boot/efi/beckhoff/fpga/CX8200-B931-2.bin.gz
+
+#DEBHELPER#
+

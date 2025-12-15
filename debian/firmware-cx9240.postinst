@@ -1,0 +1,27 @@
+#!/bin/sh
+set -e
+
+mkdir -p /boot/efi/beckhoff/fpga
+
+cp /boot/u-boot.itb /boot/efi/u-boot.itb
+cp /boot/boot.bin /boot/efi/boot.bin
+cp /boot/CX9240-B000.bin.gz /boot/efi/beckhoff/fpga/CX9240-B000.bin.gz
+cp /boot/CX9240-B110.bin.gz /boot/efi/beckhoff/fpga/CX9240-B110.bin.gz
+cp /boot/CX9240-B115.bin.gz /boot/efi/beckhoff/fpga/CX9240-B115.bin.gz
+cp /boot/CX9240-B310.bin.gz /boot/efi/beckhoff/fpga/CX9240-B310.bin.gz
+cp /boot/CX9240-B530.bin.gz /boot/efi/beckhoff/fpga/CX9240-B530.bin.gz
+cp /boot/CX9240-B800.bin.gz /boot/efi/beckhoff/fpga/CX9240-B800.bin.gz
+cp /boot/CX9240-B902.bin.gz /boot/efi/beckhoff/fpga/CX9240-B902.bin.gz
+cp /boot/CX9240-B931.bin.gz /boot/efi/beckhoff/fpga/CX9240-B931.bin.gz
+
+cp /boot/CX9240-B000-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B000-3.bin.gz
+cp /boot/CX9240-B110-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B110-3.bin.gz
+cp /boot/CX9240-B115-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B115-3.bin.gz
+cp /boot/CX9240-B310-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B310-3.bin.gz
+cp /boot/CX9240-B530-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B530-3.bin.gz
+cp /boot/CX9240-B800-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B800-3.bin.gz
+cp /boot/CX9240-B902-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B902-3.bin.gz
+cp /boot/CX9240-B931-3.bin.gz /boot/efi/beckhoff/fpga/CX9240-B931-3.bin.gz
+
+#DEBHELPER#
+

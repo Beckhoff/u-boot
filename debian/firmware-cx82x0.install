@@ -1,0 +1,22 @@
+build/cx8200/u-boot.itb /boot/
+build/cx8200/boot.bin /boot/
+debian/bsm/80-rtc-3032.rules /usr/lib/udev/rules.d/
+debian/bsm/rtc-3032-setup.service /usr/lib/systemd/system
+debian/bsm/rtc-3032-setup.sh /usr/libexec/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B000.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B110.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B115.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B310.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B530.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B800.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B902.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1/CX8200-B931.bin.gz /boot/
+
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B000-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B110-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B115-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B310-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B530-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B800-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B902-2.bin.gz /boot/
+fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/FPGA-Images/CX8200-B931-2.bin.gz /boot/

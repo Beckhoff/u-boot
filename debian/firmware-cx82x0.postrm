@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+rm -f /boot/efi/u-boot.itb
+rm -f /boot/efi/boot.bin
+rm -f /boot/efi/beckhoff/fpga/CX8200-B000-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B110-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B115-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B310-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B530-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B800-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B902-2.bin.gz
+rm -f /boot/efi/beckhoff/fpga/CX8200-B931-2.bin.gz
+
+rmdir --ignore-fail-on-non-empty /boot/efi/beckhoff
+rmdir --ignore-fail-on-non-empty /boot/efi/beckhoff/fpga
+
+#DEBHELPER#
+
