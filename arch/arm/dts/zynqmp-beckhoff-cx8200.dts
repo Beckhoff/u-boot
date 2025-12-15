@@ -1,0 +1,391 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * dts file for Beckhoff CX8200
+ *
+ * (C) Copyright 2023, Beckhoff Automation GmbH & Co. KG
+ *
+ * Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+ */
+
+/dts-v1/;
+
+#include "zynqmp.dtsi"
+#include "zynqmp-clk-ccf.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/pinctrl-zynqmp.h>
+#include <dt-bindings/phy/phy.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/leds/common.h>
+
+/ {
+	model = "Beckhoff CX8200";
+	compatible = "beckhoff,cx8200-rev1", "beckhoff,cx8200",
+		     "xlnx,zynqmp";
+
+	aliases {
+		ethernet0 = &gem2;
+		rtc0 = &rv3032;
+		serial0 = &uart1;
+		usb0 = &usb1;
+	};
+
+	chosen {
+		bootargs = "earlycon";
+		stdout-path = "serial0:115200n8";
+	};
+
+	cpus {
+		/delete-node/ cpu@2 ;
+		/delete-node/ cpu@3 ;
+	};
+
+	thermal-zones {
+		apu-thermal {
+			cooling-maps {
+				map {
+					cooling-device =
+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+				};
+			};
+		};
+	};
+
+	axi {
+		/delete-node/ debug@fee10000;
+		/delete-node/ debug@fef10000;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x0 0x0 0x3ff00000>;
+	};
+
+	pmu {
+		compatible = "arm,armv8-pmuv3";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-affinity = <&cpu0>,
+				     <&cpu1>;
+	};
+
+	iio-hwmon {
+		compatible = "iio-hwmon";
+		io-channels = <&xilinx_ams 0>, <&xilinx_ams 1>, <&xilinx_ams 2>,
+			      <&xilinx_ams 3>, <&xilinx_ams 4>, <&xilinx_ams 5>,
+			      <&xilinx_ams 6>, <&xilinx_ams 7>, <&xilinx_ams 8>,
+			      <&xilinx_ams 9>, <&xilinx_ams 10>,
+			      <&xilinx_ams 11>, <&xilinx_ams 12>;
+	};
+
+	usb1_clk: usb1_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <26000000>;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		tc-state-red {
+			color = <LED_COLOR_ID_RED>;
+			default-state = "off"; // also controlled from fpga, we set it to off to give fpga control
+			panic-indicator; // blink on panic (will only work if it's not turned on from the fpga)
+			gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+			label = "red:tc-state";
+		};
+	};
+
+	sysinfo {
+		compatible = "u-boot,sysinfo-nvmem-cell";
+		nvmem-cells = <&product>, <&serial>, <&version>, <&option>, <&product>, <&asset_tag>;
+		nvmem-cell-names = "system_product", "system_serial", "system_version", "system_sku", "baseboard_product", "chassis_asset_tag";
+
+		smbios {
+			system {
+				manufacturer = "Beckhoff Automation GmbH & Co. KG";
+				/* product set by nvmem cells */
+				/* serial set by nvmem cells */
+				/* version set by nvmem cells */
+				/* sku set by nvmem cells */
+				family = "CX82XX";
+			};
+
+			baseboard {
+				manufacturer = "Beckhoff Automation GmbH & Co. KG";
+				/* product set by nvmem cells */
+			};
+
+			chassis {
+				manufacturer = "Beckhoff Automation GmbH & Co. KG";
+				/* asset tag set by nvmem cells */
+			};
+		};
+	};
+
+	ups {
+		compatible = "gpio-charger";
+		charger-type = "ups";
+
+		charge-status-gpios = <&gpio 49 GPIO_ACTIVE_LOW>;
+
+		charge-current-limit-gpios = <&gpio 51 GPIO_ACTIVE_HIGH>;
+		charge-current-limit-mapping = <1 0x00>, // 1 (any nonzero value) => GPIO 51 low, chager enable
+									   <0 0x01>; // 0 => GPIO 51 high, chager disable
+		charge-current-limit-default-microamp = <0x01>;
+	};
+
+	firmware {
+		/delete-node/ optee;
+	};
+};
+
+&fpd_dma_chan1 {
+	status = "okay";
+};
+
+&fpd_dma_chan2 {
+	status = "okay";
+};
+
+&fpd_dma_chan3 {
+	status = "okay";
+};
+
+&fpd_dma_chan4 {
+	status = "okay";
+};
+
+&fpd_dma_chan5 {
+	status = "okay";
+};
+
+&fpd_dma_chan6 {
+	status = "okay";
+};
+
+&fpd_dma_chan7 {
+	status = "okay";
+};
+
+&fpd_dma_chan8 {
+	status = "okay";
+};
+
+&gem2 {
+	status = "okay";
+	nvmem-cells = <&gem2_mac_address>;
+	nvmem-cell-names = "mac-address";
+	phy-handle = <&phy0>;
+	phy-mode = "rgmii-id";
+	mdio: mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy0: ethernet-phy@0 { /* Broadcom B50212E */
+			reg = <0>;
+		};
+	};
+};
+
+&gpio {
+	status = "okay";
+
+	/* USB_EN */
+	enable-hog {
+		gpio-hog;
+		gpios = <47 0>;
+		output-high;
+	};
+};
+
+&qspi {
+	status = "okay";
+	flash@0 {
+		compatible = "jedec,spi-nor"; /* IS25LP016D-JULA3 */
+		reg = <0>;
+		spi-tx-bus-width = <4>;
+		spi-rx-bus-width = <4>;
+		spi-max-frequency = <50000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "beckhoff_factory_data";
+				reg = <0x0 0x11000>;
+				compatible = "nvmem-cells";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				product: product@24 {
+					reg = <0x24 0x10>;
+				};
+
+				serial: serial@34 {
+					reg = <0x34 0x10>;
+				};
+
+				option: option@44 {
+					reg = <0x44 0x20>;
+				};
+
+				gem2_mac_address: mac-address@64 {
+					reg = <0x64 0x6>;
+				};
+
+				fpga_name: fpga_name@C4 {
+					reg = <0xC4 0x20>;
+				};
+
+				version: version@E4 {
+					reg = <0xE4 0x20>;
+				};
+
+				asset_tag: asset_tag@104 {
+					reg = <0x104 0x20>;
+				};
+			};
+		};
+
+	};
+};
+
+&i2c1 {
+	status = "okay";
+	clock-frequency = <200000>;
+	scl-gpios = <&gpio 32 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	sda-gpios = <&gpio 33 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+	pinctrl-names = "default", "gpio";
+	pinctrl-0 = <&pinctrl_i2c1_default>;
+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
+
+	rv3032: rtc@51 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "microcrystal,rv3032";
+		reg = <0x51>;
+		interrupt-parent = <&gpio>;
+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+	};
+};
+
+&pinctrl0 {
+	status = "okay";
+
+	pinctrl_usb1_default: usb1-default {
+		mux {
+			groups = "usb1_0_grp";
+			function = "usb1";
+		};
+
+		conf {
+			groups = "usb1_0_grp";
+			power-source = <IO_STANDARD_LVCMOS18>;
+		};
+
+		conf-rx {
+			pins = "MIO64", "MIO65", "MIO67";
+			bias-high-impedance;
+			drive-strength = <12>;
+			slew-rate = <SLEW_RATE_FAST>;
+		};
+
+		conf-tx {
+			pins = "MIO66", "MIO68", "MIO69", "MIO70", "MIO71",
+			       "MIO72", "MIO73", "MIO74", "MIO75";
+			bias-disable;
+			drive-strength = <4>;
+			slew-rate = <SLEW_RATE_SLOW>;
+		};
+	};
+
+	pinctrl_i2c1_default: i2c1-default {
+		mux {
+			groups = "i2c1_8_grp";
+			function = "i2c1";
+		};
+
+		conf {
+			groups = "i2c1_8_grp";
+			bias-pull-up;
+			slew-rate = <SLEW_RATE_SLOW>;
+			power-source = <IO_STANDARD_LVCMOS33>;
+		};
+	};
+
+	pinctrl_i2c1_gpio: i2c1-gpio {
+		mux {
+			groups = "gpio0_32_grp", "gpio0_33_grp";
+			function = "gpio0";
+		};
+
+		conf {
+			groups = "gpio0_32_grp", "gpio0_33_grp";
+			slew-rate = <SLEW_RATE_SLOW>;
+			power-source = <IO_STANDARD_LVCMOS33>;
+		};
+	};
+};
+
+&sdhci0 {
+	status = "okay";
+	disable-wp;
+	no-1-8-v;
+	xlnx,mio-bank = <0x0>;
+};
+
+&spi0 {
+	status = "okay";
+	label = "TPM";
+	num-cs = <1>;
+	tpm@0 {
+		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
+		reg = <0>;
+		spi-max-frequency = <18500000>;
+	};
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&usb1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usb1_default>;
+	phy-names = "usb3-phy";
+	phys = <&psgtr 3 PHY_TYPE_USB3 1 3>;
+};
+
+&dwc3_1 {
+	status = "okay";
+	dr_mode = "host";
+	maximum-speed = "super-speed";
+};
+
+&watchdog0 {
+	status = "okay";
+};
+
+&xilinx_ams {
+	status = "okay";
+};
+
+&ams_ps {
+	status = "okay";
+};
+
+&ams_pl {
+	status = "okay";
+};
+
+&psgtr {
+	status = "okay";
+	/* usb3 */
+	clocks = <&usb1_clk>;
+	clock-names = "ref3";
+};
