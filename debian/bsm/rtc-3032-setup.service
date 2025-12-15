@@ -1,0 +1,6 @@
+[Unit]
+Description=RTC 3032 BSM configuration
+
+[Service]
+ExecStart=/usr/libexec/rtc-3032-setup.sh
+Type=oneshot

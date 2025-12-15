@@ -1,0 +1,223 @@
+firmware-bhf-zynqmp (0.0.28-1) trixie; urgency=medium
+
+  * bhf: board/xilinx/zynqmp: update psu init for CX8200.2
+  * bhf: debian: upgrade fpga files due to EtherCAT Slave issues
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Thu, 20 Nov 2025 13:13:21 +0100
+
+firmware-bhf-zynqmp (0.0.27-1) trixie; urgency=medium
+
+  * debian/bsm/rtc-3032-setup: wait for /dev/rtc0 device
+
+ -- Filip Jöde <F.Joede@beckhoff.com>  Tue, 04 Nov 2025 15:21:34 +0100
+
+firmware-bhf-zynqmp (0.0.26-1) trixie; urgency=medium
+
+  * debian/control: depend on util-linux-extra for /sbin/hwclock
+  * debian/bsm/rtc-3032-setup.sh: improve error handling for bsm reading
+  * debian/bsm/rtc-3032-setup.sh: add bhf header and set -eu
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Fri, 26 Sep 2025 11:49:28 +0200
+
+firmware-bhf-zynqmp (0.0.25-1) trixie; urgency=medium
+
+  * bhf: beckhoff zynqmp: Remove optee support from device tree
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Tue, 05 Aug 2025 12:17:46 +0200
+
+firmware-bhf-zynqmp (0.0.24-1) trixie; urgency=medium
+
+  * soc: zynqmp: Fix zu1cg device detection
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Mon, 04 Aug 2025 09:19:04 +0200
+
+firmware-bhf-zynqmp (0.0.23-1) trixie; urgency=medium
+
+  * ci: test install and netboot
+  * Dockerfile: apt update and install should always be in one step
+  * ci: trigger build and test separately
+  * bhf: beckhoff zynqmp: Modify device tree for enabling/disabling UPS
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Thu, 03 Jul 2025 14:41:05 +0200
+
+firmware-bhf-zynqmp (0.0.22-1) trixie; urgency=medium
+
+  * ci: update for trixie
+  * debian: *.install: use /usr/lib instead of /lib
+  * board/xilinx/zynqmp: update psu init for mc9240
+  * bhf: board/xilinx/zynqmp/zynqmp-beckhoff-cx8200/psu_init_gpl.c: sync
+    with xsa
+  * ci: add psu-init-helper to update and verify psu init files
+  * ci: reuse build container for pushing
+  * Dockerfile: drop unnecessary dependencies
+  * ci: always upload build artifacts
+  * ci: use arm64 runners
+  * ci: push source packages
+  * bhf: ci: verify checksums for bl31 and pmufw
+  * ci: build-zynqmp: download bl31 from specific job
+  * ci: upgrade pmufw to from v2022.2 to v2024.2
+  * bhf: debian: upgrade fpga files to correct profinet speed leds
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Tue, 03 Jun 2025 16:30:20 +0200
+
+firmware-bhf-zynqmp (0.0.21-1) bookworm; urgency=medium
+
+  * bhf: mc9240: disable EEE Advertisement for ethernet phy
+  * bhf: cx9240: disable EEE Advertisement for ethernet phys
+  * bhf: cx8200: disable EEE Advertisement for ethernet phy
+  * bhf: disable EEE advertisement for ethernet phys
+  * bhf: move configuration of ethernet phy leds to separate function
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Fri, 23 May 2025 15:46:56 +0200
+
+firmware-bhf-zynqmp (0.0.20-1) bookworm; urgency=medium
+
+  * BHF: zynqmp configs: increase phy autonegotiaton timeout from 4 to 30 seconds
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Wed, 23 Apr 2025 14:14:06 +0200
+
+firmware-bhf-zynqmp (0.0.19-1) bookworm; urgency=medium
+
+  * bhf: cx8200: add usb3-phy settings to devicetree
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Mon, 31 Mar 2025 09:08:33 +0200
+
+firmware-bhf-zynqmp (0.0.18-1) bookworm; urgency=medium
+
+  * bhf: cx9240: switch fpga fallback to hw version 3
+  * bhf: cx8200: switch fpga fallback to hw version 2
+  * bhf: write loaded fpga file name to device tree
+  * bhf: cx8200: debian: add reset button support
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Tue, 04 Feb 2025 12:31:28 +0100
+
+firmware-bhf-zynqmp (0.0.17-1) bookworm; urgency=medium
+
+  * BHF: Add the device MC9240 to the project
+
+ -- Patrick Bruenn <p.bruenn@beckhoff.com>  Tue, 28 Jan 2025 09:05:22 +0100
+
+firmware-bhf-zynqmp (0.0.16-1) bookworm; urgency=medium
+
+  * bhf: cx9240: debian: add fpga files for hw version 3
+  * bhf: cx8200: debian: add fpga files for hw version 2
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Mon, 13 Jan 2025 13:22:56 +0100
+
+firmware-bhf-zynqmp (0.0.15-1) bookworm; urgency=medium
+
+  * bhf: arm:zynqmp: Enable MMU and cache very early on ZynqMP
+  * BHF: Disable the TCG2 and RNG protocol for the CX8200 and CX9240
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Thu, 09 Jan 2025 10:24:57 +0100
+
+firmware-bhf-zynqmp (0.0.14-1) bookworm; urgency=medium
+
+  * BHF: debian: add service to setup rtc backup switchover mode
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Mon, 23 Dec 2024 17:23:41 +0100
+
+firmware-bhf-zynqmp (0.0.13-1) bookworm; urgency=medium
+
+  * BHF: cleanup of CX8200 and CX9240 dts files
+  * BHF: add System Version and Chassis Asset Tag to DMI information
+  * lib: smbios: Set the Chassis Asset Tag via SYSINFO ID
+  * bhf: cx8200/cx9240: Insert gpio-charger in device tree for 1s ups
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Wed, 11 Dec 2024 18:46:08 +0100
+
+firmware-bhf-zynqmp (0.0.12-1) bookworm; urgency=medium
+
+  * BHF: add fpga filename to nvmem cells
+  * BHF: populate smbios table
+  * sysinfo: nvmem-cell: support for reading sysinfo data from nvmem
+    cells
+  * zynqmp: Set autoboot delay to zero
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Mon, 04 Nov 2024 13:54:43 +0100
+
+firmware-bhf-zynqmp (0.0.11-1) bookworm; urgency=medium
+
+  * bhf: add all fpga files
+  * bhf: use gzip for fpga bitstreams
+  * bhf: remove custom pmu settings
+  * bhf: get fpga files from nuget
+  * bhf: turn off unsed uptions
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Wed, 28 Aug 2024 10:14:28 +0200
+
+firmware-bhf-zynqmp (0.0.10-1) bookworm; urgency=medium
+
+  * debian: don't use diversions
+  * cx8200/cx9240: load fpga file based on eeprom
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Mon, 29 Jul 2024 08:50:10 +0200
+
+firmware-bhf-zynqmp (0.0.9-1) bookworm; urgency=medium
+
+  * cx9240: dts: only trigger green led on mmc activity
+  * cx8200: set tc led to yellow
+  * cx8200/cx9240: drop scsi_init from CONFIG_PREBOOT
+  * debian: use diversions to install into /boot/efi
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Mon, 22 Jul 2024 09:10:03 +0200
+
+firmware-bhf-zynqmp (0.0.8-1) bookworm; urgency=medium
+
+  * beckhoff: cx9240: set eth led mode on boot for cx9240
+  * cx9240: add gpio leds
+  * cx8200: set red pwr-led to off on boot
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Fri, 14 Jun 2024 16:26:11 +0200
+
+firmware-bhf-zynqmp (0.0.7-1) bookworm; urgency=medium
+
+  * cx8200/cx9240: specify phy correctly for gem ethernet
+  * cx8200/cx9240: add spi flash with mac addresses
+  * drivers: misc: nvmem: support reading partitions
+  * drivers: misc: nvmem: support reading from spi flash
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Fri, 07 Jun 2024 13:59:00 +0200
+
+firmware-bhf-zynqmp (0.0.6-1) bookworm; urgency=medium
+
+  * CX8200: update bitstream to Release_20240527
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Wed, 29 May 2024 17:49:28 +0200
+
+firmware-bhf-zynqmp (0.0.5-1) bookworm; urgency=medium
+
+  * CX8200: update CX8200-B000.bin for new hardware revision
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Tue, 30 Apr 2024 15:32:24 +0200
+
+firmware-bhf-zynqmp (0.0.4-1) bookworm; urgency=medium
+
+  * ci: add ci for cx9240
+  * bhf/bitstreams: update to release 2024-03-28 for fixed multicore
+    access
+  * Add CX9240
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Tue, 09 Apr 2024 09:27:19 +0200
+
+firmware-bhf-zynqmp (0.0.3-1) bookworm; urgency=medium
+
+  * update to u-boot v2024.01
+  * mmc: zynq-sdhci: refactor tapdelay settings
+  * mmc: zynq_sdhci: disable ITAPDLYENA for zero itap_delay
+  * mmc: zynq_sdhci: disable OTAPDLYENA
+  * zynqmp: boot without delay in psu_uboot_init
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Sat, 24 Feb 2024 12:48:04 +0100
+
+firmware-bhf-zynqmp (0.0.2-1) bookworm; urgency=medium
+
+  * Initial release for bookworm
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Fri, 10 Nov 2023 08:55:15 +0100
+
+firmware-bhf-zynqmp (0.0.1-1) bullseye; urgency=medium
+
+  * Initial release.
+
+ -- Corvin Köhne <c.koehne@beckhoff.com>  Thu, 21 Sep 2023 10:08:10 +0000
