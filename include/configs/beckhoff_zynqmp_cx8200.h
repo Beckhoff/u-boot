@@ -17,6 +17,8 @@
 	"fdt_addr_r=0x28000000\0" \
 	"fpga_fallback_file=CX8200-B000-2.bin\0" \
 	"preboot=" \
+	"env set eth_addr ethernet@ff0d0000;" \
+	"run eth_phy_eee_advertisement_disable;" \
 	"run load_fpga_bitstream;" \
 	"\0"
 
