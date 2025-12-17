@@ -49,4 +49,16 @@
 		"fpga_file=${fpga_fallback_file};" \
 		"run try_fpga_load;" \
 	"fi;" \
+	"\0" \
+	"eth_phy_eee_advertisement_disable=" \
+		"mdio write ${eth_addr} 0x0D 0x0007;" \
+		"mdio write ${eth_addr} 0x0E 0x003C;" \
+		"mdio write ${eth_addr} 0x0D 0x4007;" \
+		"mdio write ${eth_addr} 0x0E 0x0000;" \
+		"mdio write ${eth_addr} 0x0D 0x0007;" \
+		"mdio write ${eth_addr} 0x0E 0x803D;" \
+		"mdio write ${eth_addr} 0x0D 0x4007;" \
+		"mdio write ${eth_addr} 0x0E 0x4000;" \
+		"echo \"${eth_addr}: EEE Advertisement disabled\";" \
+		"exit;" \
 	"\0"
