@@ -68,6 +68,11 @@
 		"echo \"${eth_addr}: EEE Advertisement disabled\";" \
 		"exit;" \
 	"\0" \
+	"audio_soft_reset_deassert=" \
+		"mw 0xFD4ACC00 0x00000000;" \
+		"echo \"de-asserting the audio soft reset\";" \
+		"exit;" \
+	"\0" \
 	"evaluate_reset_button=" \
 		"gpio input ${reset_button_pin}\;" \
 		"if test $? -eq 0; then;" \
