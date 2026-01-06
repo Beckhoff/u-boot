@@ -1,3 +1,9 @@
+firmware-bhf-zynqmp (2026.1.0-1) trixie; urgency=medium
+
+  * bhf: rebase on u-boot v2026.01
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Tue, 06 Jan 2026 12:32:15 +0100
+
 firmware-bhf-zynqmp (0.0.28-1) trixie; urgency=medium
 
   * bhf: board/xilinx/zynqmp: update psu init for CX8200.2
