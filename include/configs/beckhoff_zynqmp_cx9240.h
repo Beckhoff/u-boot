@@ -23,6 +23,7 @@
 	"env set eth_addr ethernet@ff0d0000;" \
 	"run eth_phy_configure_leds;" \
 	"run eth_phy_eee_advertisement_disable;" \
+	"run audio_soft_reset_deassert;" \
 	"run load_fpga_bitstream;" \
 	"\0"
 
