@@ -1,3 +1,9 @@
+firmware-bhf-zynqmp (2026.1.1-1) trixie; urgency=medium
+
+  * bhf: cx9240: fix display output when using DP-DVI-Adapter
+
+ -- Frank Böwingloh <f.boewingloh@beckhoff.com>  Tue, 06 Jan 2026 14:38:04 +0100
+
 firmware-bhf-zynqmp (2026.1.0-1) trixie; urgency=medium
 
   * bhf: rebase on u-boot v2026.01
