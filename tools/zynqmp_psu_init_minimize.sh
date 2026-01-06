@@ -133,12 +133,6 @@ sed -i -e 's|\r\r}\r|\r}\r|g' ${TMP}
 # Remove empty lines after '{' line
 sed -i -e 's| {\r\r| {\r|g' ${TMP}
 
-# Remove braces {} around single statement blocks. E.g.:
-# | while (e) { |    | while (e) |
-# |     stg();  | => |     stg();|
-# | }           |
-sed -i -r 's| \{(\r[^\r]*;)\r\t*\}|\1|g' ${TMP}
-
 # Remove Unnecessary parentheses around 'n_code <= 0x3C' and similar. E.g.:
 # if ((p_code >= 0x26) && ...) -> if (p_code >= 0x26 && ...)
 sed -i -r 's|\((._code .= [x[:xdigit:]]+)\)|\1|g' ${TMP}
