@@ -14,8 +14,8 @@ build:
 	find ./fpga -type f -name "*.bin" -exec gzip {} \;
 	"${MAKEFILE_PATH}/../.ci/psu-init-helper.sh" check cx8200 ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/SDK/CX8200.xsa
 	"${MAKEFILE_PATH}/../.ci/psu-init-helper.sh" check cx9240 ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/SDK/CX9240.xsa
-	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" cx8200
-	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" cx9240
+	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx8200
+	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx9240
 
 %:
 	dh $@
