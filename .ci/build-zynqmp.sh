@@ -10,17 +10,20 @@ usage() {
 			${0##*/} build <device>
 			${0##*/} download
 			${0##*/} update-checksums
+			${0##*/} commit-binaries
 
 		COMMANDS:
 			build               Build u-boot for device (cx8200, cx9240)
 			download            Download FPGA packages, firmware, and update psu_init files
 			update-checksums    Update all sha256sum files from current files on disk
+			commit-binaries     Commit FPGA binaries, psu_init files, and checksums
 
 		EXAMPLES:
 			${0##*/} build cx8200
 			${0##*/} build cx9240
 			${0##*/} download
 			${0##*/} update-checksums
+			${0##*/} commit-binaries
 
 	EOF
 }
@@ -124,6 +127,19 @@ update_checksums() {
 	update_fpga_checksums
 }
 
+commit_binaries() {
+	download_binaries
+	find fpga -name "*.bin.gz" -exec git add --force {} +
+	git add --force \
+		pmufw.bin \
+		bl31.bin \
+		board/beckhoff/*/psu_init_gpl.c \
+		"${script_path}/pmufw.bin.sha256sum" \
+		"${script_path}/bl31.bin.sha256sum" \
+		"${script_path}/fpga.sha256sum"
+	git commit --message "bhf: update FPGA binaries and psu_init files"
+}
+
 set -e
 set -u
 
@@ -139,6 +155,9 @@ case "${1:-}" in
 		;;
 	update-checksums)
 		update_checksums
+		;;
+	commit-binaries)
+		commit_binaries
 		;;
 	"" | --help | -h)
 		usage
