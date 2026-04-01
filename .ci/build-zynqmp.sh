@@ -19,16 +19,30 @@ EXAMPLES:
 EOF
 }
 
+download_file() {
+	local _output _url
+	_output="${1:?Missing output}"
+	_url="${2:?Missing url}"
+
+	if test -f "${_output}" \
+		&& grep --fixed-strings "  ${_output}" "${script_path}/sha256sum" \
+		| sha256sum --check --status 2> /dev/null; then
+		printf '%s: checksum OK, skipping download\n' "${_output}" >&2
+		return
+	fi
+	printf '%s: downloading...\n' "${_output}" >&2
+	curl --location --output "${_output}" "${_url}"
+	grep --fixed-strings "  ${_output}" "${script_path}/sha256sum" | sha256sum --check
+}
+
 build_device() {
 	local _device
 	_device="${1:?Missing device}"
 
-	curl --location --output pmufw.bin \
+	download_file pmufw.bin \
 		'https://git.beckhoff.dev/beckhoff/zynqmp-pmufw-builder/-/jobs/2176082/artifacts/raw/pmufw.bin'
-	curl --location --output bl31.bin \
+	download_file bl31.bin \
 		'https://git.beckhoff.dev/beckhoff/arm-trusted-firmware/-/jobs/754226/artifacts/raw/build/zynqmp/release/bl31.bin'
-
-	sha256sum --check "${script_path}/sha256sum"
 
 	tools/zynqmp_pm_cfg_obj_convert.py "board/beckhoff/${_device}/pm_cfg_obj.c" pmu_obj.bin
 
