@@ -5,17 +5,8 @@ MAKEFILE_PATH:=$(shell dirname $(realpath $(firstword ${MAKEFILE_LIST})))
 .PHONY: build
 
 build:
-	AZDEVOPS_PAT_RO=${DEB_AZDEVOPS_PAT_RO} nugetctl install Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1  -OutputDirectory fpga/ -Version 2.0.0-202411261448
-	AZDEVOPS_PAT_RO=${DEB_AZDEVOPS_PAT_RO} nugetctl install Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2  -OutputDirectory fpga/ -Version 2.2.2-202509261031
-	AZDEVOPS_PAT_RO=${DEB_AZDEVOPS_PAT_RO} nugetctl install Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2  -OutputDirectory fpga/ -Version 2.0.0-202411281238
-	AZDEVOPS_PAT_RO=${DEB_AZDEVOPS_PAT_RO} nugetctl install Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3  -OutputDirectory fpga/ -Version 2.4.0-202509261117
-	find ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/ -type f -name "*.bin" -exec sh -xuc 'mv "$$1" "$${1%.bin}-2.bin"' _ {} \;
-	find ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/ -type f -name "*.bin" -exec sh -xuc 'mv "$$1" "$${1%.bin}-3.bin"' _ {} \;
-	find ./fpga -type f -name "*.bin" -exec gzip {} \;
-	"${MAKEFILE_PATH}/../.ci/psu-init-helper.sh" check cx8200 ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/SDK/CX8200.xsa
-	"${MAKEFILE_PATH}/../.ci/psu-init-helper.sh" check cx9240 ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/SDK/CX9240.xsa
-	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx8200
-	"${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx9240
+	AZDEVOPS_PAT_RO="${DEB_AZDEVOPS_PAT_RO}" "${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx8200
+	AZDEVOPS_PAT_RO="${DEB_AZDEVOPS_PAT_RO}" "${MAKEFILE_PATH}/../.ci/build-zynqmp.sh" build cx9240
 
 %:
 	dh $@

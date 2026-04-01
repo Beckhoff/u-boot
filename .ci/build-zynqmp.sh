@@ -13,7 +13,7 @@ USAGE:
 
 COMMANDS:
     build               Build u-boot for device (cx8200, cx9240)
-    download            Download firmware (pmufw.bin, bl31.bin)
+    download            Download firmware and FPGA bitstreams
     update-checksums    Update sha256sum file from current files on disk
 
 EXAMPLES:
@@ -46,6 +46,40 @@ download_binaries() {
 		'https://git.beckhoff.dev/beckhoff/zynqmp-pmufw-builder/-/jobs/2176082/artifacts/raw/pmufw.bin'
 	download_file bl31.bin \
 		'https://git.beckhoff.dev/beckhoff/arm-trusted-firmware/-/jobs/754226/artifacts/raw/build/zynqmp/release/bl31.bin'
+
+	if grep --fixed-strings '  fpga/' "${script_path}/sha256sum" \
+		| sha256sum --check --status 2> /dev/null; then
+		printf 'fpga: checksums OK, skipping download\n' >&2
+	else
+		: "${AZDEVOPS_PAT_RO:?AZDEVOPS_PAT_RO must be set}"
+		nugetctl install \
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1 -OutputDirectory fpga/ -Version 2.0.0-202411261448
+		nugetctl install \
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2 -OutputDirectory fpga/ -Version 2.2.2-202509261031
+		nugetctl install \
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2 -OutputDirectory fpga/ -Version 2.0.0-202411281238
+		nugetctl install \
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3 -OutputDirectory fpga/ -Version 2.4.0-202509261117
+
+		# We need to move the fpga binaries to the paths expected by our debian package install file and eeprom names
+		find ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/ \
+			-type f -name "*.bin" ! -name "*-2.bin" \
+			-exec sh -xuc 'mv "$1" "${1%.bin}-2.bin"' _ {} \;
+		find ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/ \
+			-type f -name "*.bin" ! -name "*-3.bin" \
+			-exec sh -xuc 'mv "$1" "${1%.bin}-3.bin"' _ {} \;
+
+		find ./fpga -type f -name "*.bin" -exec gzip --no-name {} \;
+
+		find ./fpga -name "*.nupkg" -delete
+
+		grep --fixed-strings '  fpga/' "${script_path}/sha256sum" | sha256sum --check
+	fi
+
+	"${script_path}/psu-init-helper.sh" check cx8200 \
+		./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/SDK/CX8200.xsa
+	"${script_path}/psu-init-helper.sh" check cx9240 \
+		./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3/SDK/CX9240.xsa
 }
 
 build_device() {
@@ -67,7 +101,10 @@ build_device() {
 }
 
 update_checksums() {
-	sha256sum pmufw.bin bl31.bin > "${script_path}/sha256sum"
+	{
+		sha256sum pmufw.bin bl31.bin
+		find fpga -type f -name "*.bin.gz" -exec sha256sum {} +
+	} | LC_ALL=C sort > "${script_path}/sha256sum"
 }
 
 set -e
