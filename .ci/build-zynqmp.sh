@@ -8,13 +8,16 @@ Build script for Beckhoff ZynqMP u-boot targets.
 
 USAGE:
     ${0##*/} build <device>
+    ${0##*/} update-checksums
 
 COMMANDS:
     build               Build u-boot for device (cx8200, cx9240)
+    update-checksums    Update sha256sum file from current files on disk
 
 EXAMPLES:
     ${0##*/} build cx8200
     ${0##*/} build cx9240
+    ${0##*/} update-checksums
 
 EOF
 }
@@ -56,6 +59,10 @@ build_device() {
 	cp spl/boot.bin u-boot.itb "build/${_device}/"
 }
 
+update_checksums() {
+	sha256sum pmufw.bin bl31.bin > "${script_path}/sha256sum"
+}
+
 set -e
 set -u
 
@@ -73,6 +80,9 @@ shift
 case "${mode}" in
 	build)
 		build_device "${1:?Missing device argument}"
+		;;
+	update-checksums)
+		update_checksums
 		;;
 	--help | -h)
 		usage
