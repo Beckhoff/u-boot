@@ -28,8 +28,7 @@ build_device() {
 	curl --location --output bl31.bin \
 		'https://git.beckhoff.dev/beckhoff/arm-trusted-firmware/-/jobs/754226/artifacts/raw/build/zynqmp/release/bl31.bin'
 
-	sha256sum --check "${script_path}/pmufw.bin.sha256sum"
-	sha256sum --check "${script_path}/bl31.bin.sha256sum"
+	sha256sum --check "${script_path}/sha256sum"
 
 	tools/zynqmp_pm_cfg_obj_convert.py "board/beckhoff/${_device}/pm_cfg_obj.c" pmu_obj.bin
 
