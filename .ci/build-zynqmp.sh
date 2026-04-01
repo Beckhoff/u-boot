@@ -8,15 +8,18 @@ Build script for Beckhoff ZynqMP u-boot targets.
 
 USAGE:
     ${0##*/} build <device>
+    ${0##*/} download
     ${0##*/} update-checksums
 
 COMMANDS:
     build               Build u-boot for device (cx8200, cx9240)
+    download            Download firmware (pmufw.bin, bl31.bin)
     update-checksums    Update sha256sum file from current files on disk
 
 EXAMPLES:
     ${0##*/} build cx8200
     ${0##*/} build cx9240
+    ${0##*/} download
     ${0##*/} update-checksums
 
 EOF
@@ -38,14 +41,18 @@ download_file() {
 	grep --fixed-strings "  ${_output}" "${script_path}/sha256sum" | sha256sum --check
 }
 
-build_device() {
-	local _device
-	_device="${1:?Missing device}"
-
+download_binaries() {
 	download_file pmufw.bin \
 		'https://git.beckhoff.dev/beckhoff/zynqmp-pmufw-builder/-/jobs/2176082/artifacts/raw/pmufw.bin'
 	download_file bl31.bin \
 		'https://git.beckhoff.dev/beckhoff/arm-trusted-firmware/-/jobs/754226/artifacts/raw/build/zynqmp/release/bl31.bin'
+}
+
+build_device() {
+	local _device
+	_device="${1:?Missing device}"
+
+	download_binaries
 
 	tools/zynqmp_pm_cfg_obj_convert.py "board/beckhoff/${_device}/pm_cfg_obj.c" pmu_obj.bin
 
@@ -80,6 +87,9 @@ shift
 case "${mode}" in
 	build)
 		build_device "${1:?Missing device argument}"
+		;;
+	download)
+		download_binaries
 		;;
 	update-checksums)
 		update_checksums
