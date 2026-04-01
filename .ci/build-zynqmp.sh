@@ -10,17 +10,20 @@ USAGE:
     ${0##*/} build <device>
     ${0##*/} download
     ${0##*/} update-checksums
+    ${0##*/} commit-binaries
 
 COMMANDS:
     build               Build u-boot for device (cx8200, cx9240)
     download            Download firmware and FPGA bitstreams
     update-checksums    Update sha256sum file from current files on disk
+    commit-binaries     Commit firmware, FPGA bitstreams, and checksums
 
 EXAMPLES:
     ${0##*/} build cx8200
     ${0##*/} build cx9240
     ${0##*/} download
     ${0##*/} update-checksums
+    ${0##*/} commit-binaries
 
 EOF
 }
@@ -107,6 +110,17 @@ update_checksums() {
 	} | LC_ALL=C sort > "${script_path}/sha256sum"
 }
 
+commit_binaries() {
+	download_binaries
+
+	find fpga -name "*.bin.gz" -exec git add --force {} +
+	git add --force \
+		pmufw.bin \
+		bl31.bin \
+		"${script_path}/sha256sum"
+	git commit --message "bhf: update FPGA binaries"
+}
+
 set -e
 set -u
 
@@ -130,6 +144,9 @@ case "${mode}" in
 		;;
 	update-checksums)
 		update_checksums
+		;;
+	commit-binaries)
+		commit_binaries
 		;;
 	--help | -h)
 		usage
