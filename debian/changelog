@@ -1,3 +1,9 @@
+firmware-bhf-zynqmp (2026.4.0-1) trixie; urgency=medium
+
+  * rebase on u-boot v2026.04
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Wed, 13 May 2026 10:39:32 +0200
+
 firmware-bhf-zynqmp (2026.1.2-1) trixie; urgency=medium
 
   * cx8200/cx9240: Generate verbose SMBIOS table information
