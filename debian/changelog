@@ -1,3 +1,18 @@
+firmware-bhf-zynqmp (2026.4.1-1) trixie; urgency=medium
+
+  * bhf: build-zynqmp: add commit-binaries subcommand
+  * bhf: build-zynqmp: move fpga firmware support from debian rules to
+    build-zynqmp
+  * bhf: build-zynqmp: add download subcommand
+  * bhf: build-zynqmp: add update-checksums subcommand
+  * bhf: build-zynqmp: skip download when checksum matches
+  * bhf: build-zynqmp: combine pmufw and bl31 checksums into one file
+  * bhf: build-zynqmp: restructure into build_device with build
+    subcommand
+  * bhf: build-zynqmp: use posix shell and style guide
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Thu, 21 May 2026 10:37:02 +0200
+
 firmware-bhf-zynqmp (2026.4.0-1) trixie; urgency=medium
 
   * rebase on u-boot v2026.04
