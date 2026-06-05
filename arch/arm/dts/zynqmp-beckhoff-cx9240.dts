@@ -96,11 +96,14 @@
 
 	leds {
 		compatible = "gpio-leds";
+		/* Power LED: green on "ups-charging" (power present),
+		 * red+blue on "ups-not-charging" (power loss = violet). */
 		pwr-red {
 			color = <LED_COLOR_ID_RED>;
 			default-state = "off";
 			gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
 			label = "red:pwr";
+			linux,default-trigger = "ups-not-charging";
 			panic-indicator;
 		};
 
@@ -109,6 +112,7 @@
 			default-state = "on";
 			gpios = <&gpio 28 GPIO_ACTIVE_HIGH>;
 			label = "green:pwr";
+			linux,default-trigger = "ups-charging";
 		};
 
 		pwr-blue {
@@ -116,6 +120,7 @@
 			default-state = "off";
 			gpios = <&gpio 34 GPIO_ACTIVE_HIGH>;
 			label = "blue:pwr";
+			linux,default-trigger = "ups-not-charging";
 		};
 
 		hdd-red {
