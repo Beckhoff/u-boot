@@ -17,6 +17,7 @@
 	"fdt_addr_r=0x28000000\0" \
 	"fpga_fallback_file=CX9240-B000-3.bin\0" \
 	"preboot=" \
+	"led red:pwr on; led green:pwr on; led blue:pwr off;" \
 	"env set eth_addr ethernet@ff0c0000;" \
 	"run eth_phy_configure_leds;" \
 	"run eth_phy_eee_advertisement_disable;" \
