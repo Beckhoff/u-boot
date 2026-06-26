@@ -1,3 +1,10 @@
+firmware-bhf-zynqmp (2026.4.2-1) trixie; urgency=medium
+
+  * bhf: cx9240: light power LED yellow while u-boot runs
+  * bhf: cx9240: drive power LED from UPS charging/not-charging triggers
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Fri, 26 Jun 2026 10:24:56 +0200
+
 firmware-bhf-zynqmp (2026.4.1-1) trixie; urgency=medium
 
   * bhf: build-zynqmp: add commit-binaries subcommand
