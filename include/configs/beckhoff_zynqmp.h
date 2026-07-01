@@ -52,6 +52,7 @@
 	"\0" \
 	"eth_phy_configure_leds=" \
 		"mdio write ${eth_addr} 0x1c 0x8807;" \
+		"mdio write ${eth_addr} 0x1c 0xb410;" \
 		"mdio write ${eth_addr} 0x1c 0xb8ea;" \
 		"echo \"${eth_addr}: LEDs configured\";" \
 		"exit;" \
