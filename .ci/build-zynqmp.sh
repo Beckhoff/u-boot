@@ -58,11 +58,11 @@ download_binaries() {
 		nugetctl install \
 			Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.1 -OutputDirectory fpga/ -Version 2.0.0-202411261448
 		nugetctl install \
-			Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2 -OutputDirectory fpga/ -Version 2.2.2-202509261031
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2 -OutputDirectory fpga/ -Version 2.2.2-202607021301
 		nugetctl install \
 			Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.2 -OutputDirectory fpga/ -Version 2.0.0-202411281238
 		nugetctl install \
-			Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3 -OutputDirectory fpga/ -Version 2.4.0-202509261117
+			Beckhoff.HWE.FPGA.EmbeddedControl.CX9240.3 -OutputDirectory fpga/ -Version 2.4.0-202607021303
 
 		# We need to move the fpga binaries to the paths expected by our debian package install file and eeprom names
 		find ./fpga/Beckhoff.HWE.FPGA.EmbeddedControl.CX8200.2/ \
