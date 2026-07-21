@@ -1,3 +1,9 @@
+firmware-bhf-zynqmp (2026.4.4-1) trixie; urgency=medium
+
+  * board: beckhoff: cx9240: fix eth speed led indication on cx9240
+
+ -- Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>  Tue, 21 Jul 2026 12:13:57 +0200
+
 firmware-bhf-zynqmp (2026.4.3-1) trixie; urgency=medium
 
   * bhf: update FPGA binaries to optimize GMAC gigabit access
